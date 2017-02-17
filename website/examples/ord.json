@@ -2,10 +2,10 @@
     "type": "Feature",
     "geometry": {
         "type": "Point",
-        "coordinates": [41.9742, 87.9073]
+        "coordinates": [41.9742, -87.9073]
     },
     "properties": {
-        "UID": "A4X",
+        "name": "A4X",
         "hasArrived": true,
         "timeLeft": 23
     }
