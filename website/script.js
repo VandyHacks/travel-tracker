@@ -2,6 +2,7 @@ var map = L.map('map-container').setView([39.833333, -98.583333], 5);
 var sidebar = document.getElementById('sidebar');
 var clients = new Trie();
 
+
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
@@ -9,38 +10,37 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 
 
-function addLocation(jsonLocation) {
-    loadJSON(jsonLocation, function(geoJson) {
-        var geoData = JSON.parse(geoJson);
-        var UID = geoData['properties']['name'];
+function addLocation(geoData) {
 
-        if (clients.get(UID) != null) {
-            removeLocation(UID);
-            console.log("remove");
+
+    var UID = geoData['properties']['name'];
+
+    if (clients.get(UID) != null) { // check if already on the map
+        removeLocation(UID);
+        console.log("remove");
+    }
+
+
+    if (geoData.properties) { // add the properties to the popup
+        var popupString = '<div class="popup">';
+        for (var k in geoData.properties) {
+            var v = geoData.properties[k];
+            popupString += k + ': ' + v + '<br />';
         }
+        popupString += '</div>';
 
+        var marker = L.marker(geoData['geometry']['coordinates']);
+        marker.bindPopup(popupString);
+        marker.addTo(map);
 
-        if (geoData.properties) { // add the properties to the popup
-            var popupString = '<div class="popup">';
-            for (var k in geoData.properties) {
-                var v = geoData.properties[k];
-                popupString += k + ': ' + v + '<br />';
-            }
-            popupString += '</div>';
-
-            var marker = L.marker(geoData['geometry']['coordinates']);
-            marker.bindPopup(popupString);
-            marker.addTo(map);
-
-            clients.put(UID, marker);
+        clients.put(UID, marker);
 
 
 
 
-            //    var textNode = document.createTextNode(geoData['properties']['name']);
-            //  sidebar.appendChild(textNode);
-        }
-    });
+        //    var textNode = document.createTextNode(geoData['properties']['name']);
+        //  sidebar.appendChild(textNode);
+    }
 }
 
 function removeLocation(UID) {
@@ -50,6 +50,21 @@ function removeLocation(UID) {
 
 
 
+function getData() {
+    $.get("http://localhost:3000", function(data) {
+
+        var formattedDataPoints = JSON.parse(data);
+        var arrayPoints = formattedDataPoints["points"];
+        console.log(arrayPoints);
+        for (var i = 0; i < arrayPoints.length; i++) {
+            addLocation(arrayPoints[i]);
+        }
+    });
+}
+
+function getDataEveryNseconds(seconds) {
+    setInterval(getData, seconds * 1000);
+}
 
 function loadJSON(location, callback) {
 
