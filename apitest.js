@@ -35,7 +35,7 @@ var apiKey = '04b25d72aa3980bff44ab39ec8c19d1d62ed5c20';
       var keys = Object.keys(test);
       var values = Object.values(test)
       //console.log(test);
-      console.log(values[0]);
+      //console.log(values[0]);
        for(var i = 0; i<2;i++) {
             restclient.get(fxml_url + 'GetLastTrack', {
             username: username,
@@ -48,7 +48,30 @@ var apiKey = '04b25d72aa3980bff44ab39ec8c19d1d62ed5c20';
             var longitude = entry.longitude;
             var timestamp = entry.timestamp;
             console.log("latitude: " + latitude + " longitude: " + longitude + " timestamp: " + timestamp);
-            });
+            var o = {};
+            var key = 'Points';
+            o[key] = []; // empty Array, which you can push() values into
+
+
+            var data = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [latitude, longitude]
+            },
+            "properties": {
+                "name": "B7P",
+                "hasArrived": true,
+                "timeLeft": 28
+            }
+        };
+            
+            o[key].push(data);
+            console.log(JSON.stringify(o));
+        });
+            
+
+        
 
             // restclient.get(fxml_url + 'InFlightInfo', {
             // username: username,
