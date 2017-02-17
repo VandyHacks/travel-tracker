@@ -36,7 +36,7 @@ var apiKey = '04b25d72aa3980bff44ab39ec8c19d1d62ed5c20';
       var values = Object.values(test)
       //console.log(test);
       //console.log(values[0]);
-       for(var i = 0; i<2;i++) {
+       for(var i = 0; i<keys.length;i++) {
             restclient.get(fxml_url + 'GetLastTrack', {
             username: username,
             password: apiKey,
