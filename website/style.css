@@ -1,0 +1,21 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#map-container {
+    position: absolute;
+    top: 0;
+    left: 15%;
+    bottom: 0;
+    width: 85%;
+}
+
+#sidebar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 15%;
+    background-color: #D3D3D3;
+    color: #ddd
+}
