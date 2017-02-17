@@ -1,0 +1,12 @@
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [36.131687, -86.668823]
+    },
+    "properties": {
+        "name": "B7P",
+        "hasArrived": true,
+        "timeLeft": 28
+    }
+}

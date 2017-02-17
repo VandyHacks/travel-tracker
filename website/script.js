@@ -7,29 +7,18 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-var geojsonLayer = new L.GeoJSON(null, {
-    onEachFeature: function(feature, layer) {
-        if (feature.properties) {
-            var popupString = '<div class="popup">';
-            for (var k in feature.properties) {
-                var v = feature.properties[k];
-                popupString += k + ': ' + v + '<br />';
-            }
-            popupString += '</div>';
-            layer.bindPopup(popupString, {
-                maxHeight: 200
-            });
-        }
-    }
-});
-
-map.addLayer(geojsonLayer);
 
 
-function addLocation() {
-    loadJSON('example.json', function(geoJson) {
+function addLocation(jsonLocation) {
+    loadJSON(jsonLocation, function(geoJson) {
         var geoData = JSON.parse(geoJson);
-        console.log(geoData);
+        var UID = geoData['properties']['name'];
+
+        if (clients.get(UID) != null) {
+            removeLocation(UID);
+            console.log("remove");
+        }
+
 
         if (geoData.properties) { // add the properties to the popup
             var popupString = '<div class="popup">';
@@ -39,15 +28,24 @@ function addLocation() {
             }
             popupString += '</div>';
 
+            var marker = L.marker(geoData['geometry']['coordinates']);
+            marker.bindPopup(popupString);
+            marker.addTo(map);
+
+            clients.put(UID, marker);
 
 
-            L.marker(geoData['geometry']['coordinates']).addTo(map).bindPopup(popupString);
 
 
             //    var textNode = document.createTextNode(geoData['properties']['name']);
             //  sidebar.appendChild(textNode);
         }
     });
+}
+
+function removeLocation(UID) {
+    var toRemove = clients.get(UID);
+    map.removeLayer(toRemove);
 }
 
 

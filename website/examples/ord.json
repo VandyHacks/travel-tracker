@@ -6,7 +6,7 @@
     },
     "properties": {
         "name": "A4X",
-        "hasArrived": true,
+        "hasArrived": false,
         "timeLeft": 23
     }
 }
