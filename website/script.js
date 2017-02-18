@@ -52,9 +52,10 @@ function removeLocation(UID) {
 
 function getData() {
     $.get("http://localhost:3000", function(data) {
-
-        var formattedDataPoints = JSON.parse(data);
-        var arrayPoints = formattedDataPoints["points"];
+        console.log(data);
+        //   var formattedDataPoints = JSON.parse(data);
+        var formattedDataPoints = data;
+        var arrayPoints = formattedDataPoints["Points"];
         console.log(arrayPoints);
         for (var i = 0; i < arrayPoints.length; i++) {
             addLocation(arrayPoints[i]);

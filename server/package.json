@@ -1,0 +1,12 @@
+{
+    "name": "TravelTracker",
+    "description": "Accesses list of flights from Firebase and returns current status",
+    "version": "0.0.1",
+    "dependencies": {
+        "restler": "3.4.0",
+        "firebase": "3.6.9",
+        "firebase-tools": "3.3.0",
+        "express": "4.14.1",
+        "cors": "2.8.1"
+    }
+}
