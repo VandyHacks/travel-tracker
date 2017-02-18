@@ -4,7 +4,7 @@
  * Tested with node.js v0.6.14
  */
 
-var util = require('util');
+//var util = require('util');
 var restclient = require('restler');
 var firebase = require('firebase');
 var firebasetools = require('firebase-tools');
@@ -111,5 +111,5 @@ app.get('/', function(req, res) {
 })
 
 app.listen(config.ports.listen, function() {
-    console.log('Example app listening on port' + config.ports.listen)
+    console.log('Example app listening on port ' + config.ports.listen)
 })
