@@ -1,9 +1,3 @@
-/*
- * This requires: restler
- * To install, type 'npm install restler'
- * Tested with node.js v0.6.14
- */
-
 //var util = require('util');
 var restler = require('restler');
 var firebase = require('firebase');
@@ -14,17 +8,10 @@ var config = require('./config');
 var currentResults = "yo";
 
 // Initialize Firebase
-var firebaseConfig = {
-    apiKey: config.firebase.apiKey,
-    authDomain: config.firebase.authDomain,
-    databaseURL: config.firebase.databaseURL,
-    storageBucket: config.firebase.storageBucket,
-    messagingSenderId: config.firebase.messagingSenderId
-};
-
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(config.firebase);
 var database = firebase.database();
 var ref = database.ref('vals');
+
 ref.on('value', gotData, errData);
 
 function gotData(data) {
