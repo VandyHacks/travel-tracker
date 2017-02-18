@@ -8,7 +8,6 @@ Track various flights, buses, GPS streams etc and visualize on one convenient Ja
 * Firebase for storing UIDs and flights
 * Node.js with Restler and Express for a server
 
-
 ## Setup
 ### Website
 Use localhost (Python's SimpleHTTPServer works great) on the directory for whatever your favorite port is. Make sure to change `config.ports.allow` under `server/config.js` to that value.
