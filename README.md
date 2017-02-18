@@ -6,6 +6,7 @@ Track various flights, buses, GPS streams etc and visualize on one convenient Ja
 * Vanilla Javascript and HTML/CSS
 * FlightAware API
 * Firebase for storing UIDs and flights
+     * A Trie stores this stuff on the frontend
 * Node.js with Restler and Express for a server
 
 ## Setup
