@@ -18,14 +18,14 @@ var currentResults = "yo";
 
 //<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
 // Initialize Firebase
-var config = {
+var firebaseConfig = {
     apiKey: "AIzaSyCzrfmtFmJUziFbqiHXVWqnCXEdvJipZJE",
     authDomain: "travel-tracker-2e433.firebaseapp.com",
     databaseURL: "https://travel-tracker-2e433.firebaseio.com",
     storageBucket: "travel-tracker-2e433.appspot.com",
     messagingSenderId: "737416410832"
 };
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 var database = firebase.database();
 var ref = database.ref('vals');
 ref.on('value', gotData, errData);
