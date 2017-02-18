@@ -12,69 +12,60 @@ firebase.initializeApp(config.firebase);
 var database = firebase.database();
 var ref = database.ref('vals');
 
-ref.on('value', gotData, errData);
+ref.on('value', getData, errData);
 
-function gotData(data) {
+function getData(data) {
     //console.log(data.val());
     var test = data.val();
     var keys = Object.keys(test);
     var values = Object.values(test);
     var rtn = {};
-    //console.log(test);
-    //console.log(keys[0]);
+
     for (var i = 0; i < keys.length; i++) {
-        restler.get(config.flightaware.fxml_url + 'GetLastTrack', {
-            username: config.flightaware.username,
-            password: config.flightaware.apiKey,
-            query: { ident: values[i] }
-        }).on('success', function(result, response) {
-            // util.puts(util.inspect(result, true, null));
-            var trackingResults = result.GetLastTrackResult.data;
-            var entry = trackingResults[trackingResults.length - 1];
-
-            var latitude = entry.latitude;
-            var longitude = entry.longitude;
-            var timestamp = entry.timestamp;
-
-            console.log("latitude: " + latitude + " longitude: " + longitude + " timestamp: " + timestamp);
-
-            var key = 'Points';
-            rtn[key] = []; // empty Array, which you can push() values into
-
-
-            var data = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [latitude, longitude]
-                },
-                "properties": {
-                    "name": "B7P",
-                    "hasArrived": "who fucking knows",
-                    "timeLeft": -1
-                }
-            };
-
-            rtn[key].push(data);
-            console.log(JSON.stringify(rtn));
-        });
-
-
-
-
-        // restclient.get(fxml_url + 'InFlightInfo', {
-        // username: username,
-        // password: apiKey,
-        // query: {ident: 'AA3275'}
-        // }).on('success', function(result, response) {
-        // // util.puts(util.inspect(result, true, null));
-        // var arrivalTime = result.InFlightInfoResult.arrivalTime;
-        // // var actualarrivaltime = entry.actualarrivaltime;
-        // // var estimatedarrivaltime = entry.estimatedarrivaltime;
-        // // console.log("actualarrivaltime: " + actualarrivaltime + " estimatedarrivaltime: " + estimatedarrivaltime);
-        // });
+        rtn['Points'] = [];
+        rtn['Points'].push(getFlight(keys[i], values[i]));
+        // console.log(JSON.stringify(rtn));
     }
     currentResults = rtn;
+}
+
+// uses flightaware api to get the flight 
+// returns GEOJson with information
+function getFlight(uid, flightCode) {
+    var rtn = {};
+    restler.get(config.flightaware.fxml_url + 'GetLastTrack', {
+        username: config.flightaware.username,
+        password: config.flightaware.apiKey,
+        query: { ident: flightCode }
+    }).on('success', function(result, response) {
+        // util.puts(util.inspect(result, true, null));
+        var trackingResults = result.GetLastTrackResult.data;
+        var entry = trackingResults[trackingResults.length - 1];
+
+        var latitude = entry.latitude;
+        var longitude = entry.longitude;
+        var timestamp = entry.timestamp;
+
+        console.log("latitude: " + latitude + " longitude: " + longitude + " timestamp: " + timestamp);
+
+        rtn = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [latitude, longitude]
+            },
+            "properties": {
+                "name": uid,
+                "hasArrived": "who fucking knows",
+                "timeLeft": -1
+            }
+        };
+
+        // rtn[key].push(data);
+        console.log(JSON.stringify(rtn));
+    });
+
+    return rtn;
 }
 
 function errData(err) {
