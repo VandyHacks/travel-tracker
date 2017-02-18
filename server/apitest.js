@@ -5,7 +5,7 @@
  */
 
 //var util = require('util');
-var restclient = require('restler');
+var restler = require('restler');
 var firebase = require('firebase');
 var firebasetools = require('firebase-tools');
 var config = require('./config');
@@ -36,7 +36,7 @@ function gotData(data) {
     //console.log(test);
     //console.log(keys[0]);
     for (var i = 0; i < keys.length; i++) {
-        restclient.get(config.flightaware.fxml_url + 'GetLastTrack', {
+        restler.get(config.flightaware.fxml_url + 'GetLastTrack', {
             username: config.flightaware.username,
             password: config.flightaware.apiKey,
             query: { ident: values[i] }
