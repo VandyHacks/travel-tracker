@@ -8,23 +8,20 @@ var util = require('util');
 var restclient = require('restler');
 var firebase = require('firebase');
 var firebasetools = require('firebase-tools');
+var config = require('./config');
 
-
-var fxml_url = 'http://flightxml.flightaware.com/json/FlightXML2/';
-var username = 'frankpbos';
-var apiKey = '04b25d72aa3980bff44ab39ec8c19d1d62ed5c20';
 
 var currentResults = "yo";
 
-//<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
 // Initialize Firebase
 var firebaseConfig = {
-    apiKey: "AIzaSyCzrfmtFmJUziFbqiHXVWqnCXEdvJipZJE",
-    authDomain: "travel-tracker-2e433.firebaseapp.com",
-    databaseURL: "https://travel-tracker-2e433.firebaseio.com",
-    storageBucket: "travel-tracker-2e433.appspot.com",
-    messagingSenderId: "737416410832"
+    apiKey: config.firebase.apiKey,
+    authDomain: config.firebase.authDomain,
+    databaseURL: config.firebase.databaseURL,
+    storageBucket: config.firebase.storageBucket,
+    messagingSenderId: config.firebase.messagingSenderId
 };
+
 firebase.initializeApp(firebaseConfig);
 var database = firebase.database();
 var ref = database.ref('vals');
@@ -39,9 +36,9 @@ function gotData(data) {
     //console.log(test);
     //console.log(keys[0]);
     for (var i = 0; i < keys.length; i++) {
-        restclient.get(fxml_url + 'GetLastTrack', {
-            username: username,
-            password: apiKey,
+        restclient.get(config.flightaware.fxml_url + 'GetLastTrack', {
+            username: config.flightaware.username,
+            password: config.flightaware.apiKey,
             query: { ident: values[i] }
         }).on('success', function(result, response) {
             // util.puts(util.inspect(result, true, null));
@@ -105,7 +102,7 @@ var cors = require('cors');
 //Lets define a port we want to listen to
 
 var app = express()
-app.use(cors({ origin: 'http://localhost:8078' }));
+app.use(cors({ origin: 'http://localhost:' + config.ports.allow }));
 
 
 
@@ -113,6 +110,6 @@ app.get('/', function(req, res) {
     res.send(currentResults);
 })
 
-app.listen(3000, function() {
-    console.log('Example app listening on port 3000!')
+app.listen(config.ports.listen, function() {
+    console.log('Example app listening on port' + config.ports.listen)
 })
