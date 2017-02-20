@@ -6,6 +6,7 @@
         "url": "https://github.com/bencooper222/travel-tracker.git"
     },
     "version": "0.0.1",
+    "license": "MIT",
     "dependencies": {
         "restler": "3.4.0",
         "firebase": "3.6.9",
