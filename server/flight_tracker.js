@@ -1,11 +1,9 @@
-//var util = require('util');
 var restler = require('restler');
 var firebase = require('firebase');
 var firebasetools = require('firebase-tools');
-//var Triejs = require('triejs');
 var config = require('./config');
 
-var currentResults = "yo";
+var exports = module.exports = {};
 
 
 var clients;
@@ -22,8 +20,7 @@ ref.on('value', function(data) {
 
 
 
-
-function getAllFlights(getRequest) {
+exports.getAllFlights = function(getRequest) {
     //console.log(data.val());
     //clients = data.val();
 
@@ -36,18 +33,9 @@ function getAllFlights(getRequest) {
     rtn['Points'] = [];
 
 
-    function completeFlightTask() {
-        numKeys--;
-
-        if (numKeys <= 0) {
-            getRequest(rtn);
-        }
-    }
-
     for (var i = 0; i < keys.length; i++) {
 
         rtn['Points'].push(getFlight(keys[i], values[i]));
-        completeFlightTask();
         // console.log(JSON.stringify(rtn));
     }
     //   getRequest(rtn);
@@ -72,7 +60,7 @@ function getFlight(uid, flightCode) {
 
         //   console.log("latitude: " + latitude + " longitude: " + longitude + " timestamp: " + timestamp);
 
-        rtn = {
+        rtn = { // GeoJSON format
             "type": "Feature",
             "geometry": {
                 "type": "Point",
