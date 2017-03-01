@@ -5,13 +5,14 @@
         "type": "git",
         "url": "https://github.com/bencooper222/travel-tracker.git"
     },
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "MIT",
     "dependencies": {
-        "restler": "3.4.0",
+        "async": "^2.1.5",
+        "cors": "2.8.1",
+        "express": "4.14.1",
         "firebase": "3.6.9",
         "firebase-tools": "3.3.0",
-        "express": "4.14.1",
-        "cors": "2.8.1"
+        "restler": "3.4.0"
     }
 }

@@ -17,8 +17,8 @@ app.use(cors({ origin: 'http://localhost:' + config.ports.allow }));
 
 app.get('/', function(req, res) {
 
-    getAllFlights(function(data) {
-        console.log(JSON.stringify(data) + " h");
+    tracker.getAllFlights(function(data) {
+        //  console.log(JSON.stringify(data) + " h");
         res.send(data);
     });
     //  res.send(getAllFlights());

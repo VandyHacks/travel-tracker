@@ -15,12 +15,13 @@ var ref = database.ref('vals');
 
 ref.on('value', function(data) {
     clients = data.val();
+    console.log(clients);
 
 }, errData);
 
 
 
-exports.getAllFlights = function(getRequest) {
+exports.getAllFlights = function(callback) {
     //console.log(data.val());
     //clients = data.val();
 
@@ -35,15 +36,23 @@ exports.getAllFlights = function(getRequest) {
 
     for (var i = 0; i < keys.length; i++) {
 
-        rtn['Points'].push(getFlight(keys[i], values[i]));
-        // console.log(JSON.stringify(rtn));
+        var complete = false;
+        getFlight(keys[i], values[i], function(data) {
+            rtn['Points'].push(data);
+        });
+
+        //  rtn['Points'].push(getFlight(keys[i], values[i]));
+
+
     }
-    //   getRequest(rtn);
+
+
 }
 
 // uses flightaware api to get the flight 
 // returns GEOJson with information
-function getFlight(uid, flightCode) {
+function getFlight(uid, flightCode, callback) {
+    console.log("hi")
     var rtn = {};
     restler.get(config.flightaware.fxml_url + 'GetLastTrack', {
         username: config.flightaware.username,
@@ -74,10 +83,11 @@ function getFlight(uid, flightCode) {
         };
 
         // rtn[key].push(data);
-        // console.log(JSON.stringify(rtn));
+        console.log(JSON.stringify(rtn));
+        callback(rtn);
     });
 
-    return rtn;
+
 }
 
 function errData(err) {
