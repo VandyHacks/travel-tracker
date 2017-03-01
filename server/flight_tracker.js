@@ -2,31 +2,55 @@
 var restler = require('restler');
 var firebase = require('firebase');
 var firebasetools = require('firebase-tools');
+//var Triejs = require('triejs');
 var config = require('./config');
 
-
 var currentResults = "yo";
+
+
+var clients;
 
 // Initialize Firebase
 firebase.initializeApp(config.firebase);
 var database = firebase.database();
 var ref = database.ref('vals');
 
-ref.on('value', getData, errData);
+ref.on('value', function(data) {
+    clients = data.val();
 
-function getData(data) {
+}, errData);
+
+
+
+
+function getAllFlights(getRequest) {
     //console.log(data.val());
-    var test = data.val();
-    var keys = Object.keys(test);
-    var values = Object.values(test);
+    //clients = data.val();
+
+    var keys = Object.keys(clients);
+    var values = Object.values(clients);
+
+    var numKeys = keys.length;
+
     var rtn = {};
+    rtn['Points'] = [];
+
+
+    function completeFlightTask() {
+        numKeys--;
+
+        if (numKeys <= 0) {
+            getRequest(rtn);
+        }
+    }
 
     for (var i = 0; i < keys.length; i++) {
-        rtn['Points'] = [];
+
         rtn['Points'].push(getFlight(keys[i], values[i]));
+        completeFlightTask();
         // console.log(JSON.stringify(rtn));
     }
-    currentResults = rtn;
+    //   getRequest(rtn);
 }
 
 // uses flightaware api to get the flight 
@@ -46,7 +70,7 @@ function getFlight(uid, flightCode) {
         var longitude = entry.longitude;
         var timestamp = entry.timestamp;
 
-        console.log("latitude: " + latitude + " longitude: " + longitude + " timestamp: " + timestamp);
+        //   console.log("latitude: " + latitude + " longitude: " + longitude + " timestamp: " + timestamp);
 
         rtn = {
             "type": "Feature",
@@ -62,7 +86,7 @@ function getFlight(uid, flightCode) {
         };
 
         // rtn[key].push(data);
-        console.log(JSON.stringify(rtn));
+        // console.log(JSON.stringify(rtn));
     });
 
     return rtn;
@@ -71,23 +95,3 @@ function getFlight(uid, flightCode) {
 function errData(err) {
     console.log("error: " + err);
 }
-
-var http = require('http');
-var fs = require('fs');
-var express = require('express')
-var cors = require('cors');
-
-//Lets define a port we want to listen to
-
-var app = express()
-app.use(cors({ origin: 'http://localhost:' + config.ports.allow }));
-
-
-
-app.get('/', function(req, res) {
-    res.send(currentResults);
-})
-
-app.listen(config.ports.listen, function() {
-    console.log('Example app listening on port ' + config.ports.listen)
-})
