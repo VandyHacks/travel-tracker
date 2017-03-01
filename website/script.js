@@ -54,11 +54,10 @@ function getData() {
     $.get("http://localhost:3000", function(data) {
         console.log(data);
         //   var formattedDataPoints = JSON.parse(data);
-        var formattedDataPoints = data;
-        var arrayPoints = formattedDataPoints["Points"];
-        console.log(arrayPoints);
-        for (var i = 0; i < arrayPoints.length; i++) {
-            addLocation(arrayPoints[i]);
+
+        //   console.log(arrayPoints);
+        for (var i = 0; i < data.length; i++) {
+            addLocation(data[i]);
         }
     });
 }
