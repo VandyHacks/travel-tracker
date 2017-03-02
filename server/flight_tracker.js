@@ -1,102 +1,87 @@
-//var util = require('util');
 var restler = require('restler');
 var firebase = require('firebase');
 var firebasetools = require('firebase-tools');
 var config = require('./config');
+var async = require('async');
+
+var exports = module.exports = {};
 
 
-var currentResults = "yo";
+var clients;
 
+
+
+function initializeFirebase() {
+    firebase.initializeApp(config.firebase);
+    var database = firebase.database();
+    var ref = database.ref('vals');
+
+    ref.on('value', function(data) {
+        clients = data.val();
+        //   console.log(clients);
+
+    }, errData);
+}
 // Initialize Firebase
-firebase.initializeApp(config.firebase);
-var database = firebase.database();
-var ref = database.ref('vals');
+initializeFirebase();
 
-ref.on('value', gotData, errData);
 
-function gotData(data) {
+exports.getAllFlights = function(getRequest) {
     //console.log(data.val());
-    var test = data.val();
-    var keys = Object.keys(test);
-    var values = Object.values(test);
+
+    async.map(clients, getFlight, function(err, results) {
+        getRequest(results);
+    });
+
+
+}
+
+// uses flightaware api to get the flight 
+// returns GEOJson with information
+// identifier should be in the format {uid:flight code}
+function getFlight(identifier, callback) {
+
+    var uid = Object.keys(identifier)[0];
+    var flight = Object.values(identifier)[0];
+
+
     var rtn = {};
-    //console.log(test);
-    //console.log(keys[0]);
-    for (var i = 0; i < keys.length; i++) {
-        restler.get(config.flightaware.fxml_url + 'GetLastTrack', {
-            username: config.flightaware.username,
-            password: config.flightaware.apiKey,
-            query: { ident: values[i] }
-        }).on('success', function(result, response) {
-            // util.puts(util.inspect(result, true, null));
-            var trackingResults = result.GetLastTrackResult.data;
-            var entry = trackingResults[trackingResults.length - 1];
+    restler.get(config.flightaware.fxml_url + 'GetLastTrack', {
+        username: config.flightaware.username,
+        password: config.flightaware.apiKey,
+        query: { ident: flight }
+    }).on('success', function(result, response) {
+        // util.puts(util.inspect(result, true, null));
+        var trackingResults = result.GetLastTrackResult.data;
+        var entry = trackingResults[trackingResults.length - 1];
 
-            var latitude = entry.latitude;
-            var longitude = entry.longitude;
-            var timestamp = entry.timestamp;
+        var latitude = entry.latitude;
+        var longitude = entry.longitude;
+        var timestamp = entry.timestamp;
 
-            console.log("latitude: " + latitude + " longitude: " + longitude + " timestamp: " + timestamp);
+        //   console.log("latitude: " + latitude + " longitude: " + longitude + " timestamp: " + timestamp);
 
-            var key = 'Points';
-            rtn[key] = []; // empty Array, which you can push() values into
+        rtn = { // GeoJSON format
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [latitude, longitude]
+            },
+            "properties": {
+                "name": uid,
+                "hasArrived": "who fucking knows",
+                "timeLeft": -1
+            }
+        };
 
-
-            var data = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [latitude, longitude]
-                },
-                "properties": {
-                    "name": "B7P",
-                    "hasArrived": "who fucking knows",
-                    "timeLeft": -1
-                }
-            };
-
-            rtn[key].push(data);
-            console.log(JSON.stringify(rtn));
-        });
+        // rtn[key].push(data);
+        console.log(JSON.stringify(rtn));
+        return callback(null, rtn);
+    });
 
 
-
-
-        // restclient.get(fxml_url + 'InFlightInfo', {
-        // username: username,
-        // password: apiKey,
-        // query: {ident: 'AA3275'}
-        // }).on('success', function(result, response) {
-        // // util.puts(util.inspect(result, true, null));
-        // var arrivalTime = result.InFlightInfoResult.arrivalTime;
-        // // var actualarrivaltime = entry.actualarrivaltime;
-        // // var estimatedarrivaltime = entry.estimatedarrivaltime;
-        // // console.log("actualarrivaltime: " + actualarrivaltime + " estimatedarrivaltime: " + estimatedarrivaltime);
-        // });
-    }
-    currentResults = rtn;
 }
 
 function errData(err) {
     console.log("error: " + err);
 }
-
-var http = require('http');
-var fs = require('fs');
-var express = require('express')
-var cors = require('cors');
-
-//Lets define a port we want to listen to
-
-var app = express()
-app.use(cors({ origin: 'http://localhost:' + config.ports.allow }));
-
-
-
-app.get('/', function(req, res) {
-    res.send(currentResults);
-})
-
-app.listen(config.ports.listen, function() {
-    console.log('Example app listening on port ' + config.ports.listen)
-})

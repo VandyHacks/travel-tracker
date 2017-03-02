@@ -1,7 +1,7 @@
 # Travel-Tracker
 Track various flights, buses, GPS streams etc and visualize on one convenient Javascript map
 
-## Tech  Used
+## Tech Used
 * Leaflet.js for mapping
 * Vanilla Javascript and HTML/CSS
 * FlightAware API
@@ -11,16 +11,18 @@ Track various flights, buses, GPS streams etc and visualize on one convenient Ja
 
 ## Setup
 ### Website
-Use localhost (Python's SimpleHTTPServer works great) on the directory for whatever your favorite port is. Make sure to change `config.ports.allow` under `server/config.js` to that value.
+Use localhost (Python's SimpleHTTPServer works great) on the directory for whatever your favorite port is. Make sure to change `config.ports.allow` under `server/config.js` to that value. The map is currently setup to update every 30 seconds: you are free to change that. 
 ### Server
-`npm install` in the directory then run `node apitest.js`. Note that server is likely to undergo very active development in the near future so this will become a less stupid process.
+`npm install` in the directory then run `node endpoint.js`. Make sure to setup your `config.js` file appropriately. An example is provided to help you.
 ### Firebase
-Setup your firebase with a key of `vals` and under it pairs of `UID: flightCode`. For example, it could look like this.
+Setup your firebase with a key of `vals` and under it objects with pairs of this form: `UID: flightCode`. For example, it could look like this.
 ```json
 {
-  "vals" : {
-    "B7P" : "UAL1914"
-  }
+  "vals" : [ {
+    "C39" : "FFT1263"
+  }, {
+    "B7P" : "SKV7660"
+  } ]
 }
 ```
 Future versions will allow the specification of which flight under that code.

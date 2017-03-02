@@ -14,7 +14,7 @@ function addLocation(geoData) {
 
 
     var UID = geoData['properties']['name'];
-
+    console.log(clients.get(UID));
     if (clients.get(UID) != null) { // check if already on the map
         removeLocation(UID);
         console.log("remove");
@@ -54,11 +54,10 @@ function getData() {
     $.get("http://localhost:3000", function(data) {
         console.log(data);
         //   var formattedDataPoints = JSON.parse(data);
-        var formattedDataPoints = data;
-        var arrayPoints = formattedDataPoints["Points"];
-        console.log(arrayPoints);
-        for (var i = 0; i < arrayPoints.length; i++) {
-            addLocation(arrayPoints[i]);
+
+        //   console.log(arrayPoints);
+        for (var i = 0; i < data.length; i++) {
+            addLocation(data[i]);
         }
     });
 }
@@ -80,3 +79,5 @@ function loadJSON(location, callback) {
     };
     xobj.send(null);
 }
+
+getDataEveryNseconds(30); // feel free to not have this on
