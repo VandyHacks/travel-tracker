@@ -14,7 +14,7 @@ function addLocation(geoData) {
 
 
     var UID = geoData['properties']['name'];
-
+    console.log(clients.get(UID));
     if (clients.get(UID) != null) { // check if already on the map
         removeLocation(UID);
         console.log("remove");
@@ -79,3 +79,5 @@ function loadJSON(location, callback) {
     };
     xobj.send(null);
 }
+
+getDataEveryNseconds(30); // feel free to not have this on

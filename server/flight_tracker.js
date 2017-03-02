@@ -18,7 +18,7 @@ function initializeFirebase() {
 
     ref.on('value', function(data) {
         clients = data.val();
-        console.log(clients);
+        //   console.log(clients);
 
     }, errData);
 }
@@ -28,41 +28,12 @@ initializeFirebase();
 
 exports.getAllFlights = function(getRequest) {
     //console.log(data.val());
-    //clients = data.val();
-
-
 
     async.map(clients, getFlight, function(err, results) {
         getRequest(results);
     });
 
 
-
-    /*
-        var keys = Object.keys(clients);
-        var values = Object.values(clients);
-
-        var numKeys = keys.length;
-
-        var rtn = {};
-        rtn['Points'] = [];
-
-
-
-
-        for (var i = 0; i < keys.length; i++) {
-
-            var complete = false;
-            getFlight(keys[i], values[i], function(data) {
-                rtn['Points'].push(data);
-            });
-
-            //  rtn['Points'].push(getFlight(keys[i], values[i]));
-
-
-        }
-
-    */
 }
 
 // uses flightaware api to get the flight 
@@ -70,13 +41,15 @@ exports.getAllFlights = function(getRequest) {
 // identifier should be in the format {uid:flight code}
 function getFlight(identifier, callback) {
 
+    var uid = Object.keys(identifier)[0];
+    var flight = Object.values(identifier)[0];
 
 
     var rtn = {};
     restler.get(config.flightaware.fxml_url + 'GetLastTrack', {
         username: config.flightaware.username,
         password: config.flightaware.apiKey,
-        query: { ident: identifier }
+        query: { ident: flight }
     }).on('success', function(result, response) {
         // util.puts(util.inspect(result, true, null));
         var trackingResults = result.GetLastTrackResult.data;
@@ -95,7 +68,7 @@ function getFlight(identifier, callback) {
                 "coordinates": [latitude, longitude]
             },
             "properties": {
-                "name": "eh",
+                "name": uid,
                 "hasArrived": "who fucking knows",
                 "timeLeft": -1
             }
