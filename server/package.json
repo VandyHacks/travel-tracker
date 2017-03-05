@@ -1,5 +1,5 @@
 {
-    "name": "TravelTracker",
+    "name": "travel-tracker-backend",
     "description": "Accesses list of flights from Firebase and returns current status",
     "repository": {
         "type": "git",

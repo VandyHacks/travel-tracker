@@ -10,10 +10,10 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 
 
-function addLocation(geoData) {
+function addLocation(point) {
 
 
-    var UID = geoData['properties']['name'];
+    var UID = point['properties']['name'];
     console.log(clients.get(UID));
     if (clients.get(UID) != null) { // check if already on the map
         removeLocation(UID);
@@ -21,15 +21,15 @@ function addLocation(geoData) {
     }
 
 
-    if (geoData.properties) { // add the properties to the popup
+    if (point.properties) { // add the properties to the popup
         var popupString = '<div class="popup">';
-        for (var k in geoData.properties) {
-            var v = geoData.properties[k];
+        for (var k in point.properties) {
+            var v = point.properties[k];
             popupString += k + ': ' + v + '<br />';
         }
         popupString += '</div>';
 
-        var marker = L.marker(geoData['geometry']['coordinates']);
+        var marker = L.marker(point['geometry']['coordinates']);
         marker.bindPopup(popupString);
         marker.addTo(map);
 
@@ -41,6 +41,13 @@ function addLocation(geoData) {
         //    var textNode = document.createTextNode(geoData['properties']['name']);
         //  sidebar.appendChild(textNode);
     }
+}
+
+// LatLng object that looks like below 
+// [43.11667, 131.90000]
+function drawArc(start, end) {
+    L.Polyline.Arc(start, end).addTo(map);
+
 }
 
 function removeLocation(UID) {
@@ -63,6 +70,7 @@ function getData() {
 }
 
 function getDataEveryNseconds(seconds) {
+    getData();
     setInterval(getData, seconds * 1000);
 }
 

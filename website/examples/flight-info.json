@@ -1,0 +1,18 @@
+{
+    "uid": "AX4",
+    "length": 83,
+    "arrival": {
+        "coord": [36.126594, -86.677629],
+        "code": "BNA"
+    },
+    "departure": {
+        "arrival": {
+            "coord": [41.967497, -87.905837],
+            "code": "ORD"
+        },
+        "current": {
+            "coord": [39.7692, -87.5881],
+            "percentage": 55.4
+        }
+    }
+}
