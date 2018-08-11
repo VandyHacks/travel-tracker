@@ -9,10 +9,10 @@
     "license": "MIT",
     "dependencies": {
         "async": "^2.1.5",
-        "cors": "2.8.1",
-        "express": "4.14.1",
-        "firebase": "3.6.9",
-        "firebase-tools": "3.3.0",
+        "cors": "2.8.4",
+        "express": "4.16.3",
+        "firebase": "5.3.1",
+        "firebase-tools": "4.0.3",
         "restler": "3.4.0"
     }
 }
