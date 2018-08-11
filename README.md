@@ -1,4 +1,7 @@
 # Travel-Tracker
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/VandyHacks/travel-tracker.svg)](https://greenkeeper.io/)
+
 Track various flights, buses, GPS streams etc and visualize on one convenient Javascript map
 
 ## Tech Used
